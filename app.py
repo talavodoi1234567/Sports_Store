@@ -7,7 +7,7 @@ import uuid
 import os
 import psycopg2
 # from peewee import DataError
-import advanceSQLQuery
+# import advanceSQLQuery
 from category import Category
 from product import Product
 from test_base64 import convert_pic
