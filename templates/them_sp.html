@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--        <link href="css/style.css" rel="stylesheet">-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    </head>
+    <body>
+    <header class="header">
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="./index.html">
+                        <img src="./assets/img/logo1.png" alt="Trang chủ" class="logo">
+                    </a>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="btn btn-light" role="button" aria-disabled="true">HOT</a></li>
+
+                        <li class="nav-item"><a class="btn btn-light" role="button" aria-disabled="true">LỊCH SỬ</a>
+                        </li>
+                        <li>
+                            <div class="dropdown" id="dropdownType">
+                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    THỂ LOẠI
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    XẾP HẠNG
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% for element in list_category %}
+                                    <li><a class="dropdown-item" href="#">{{element[1]}}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search" id="searchForm">
+                        <input class="form-control me-2" type="search" placeholder="Tìm kiếm truyện" aria-label="Search"
+                            id="searchValue" name="search">
+                        <button class="btn-search btn btn-outline-success" type="submit">Tìm</button>
+                    </form>
+
+                    <div id="isLogIn">
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container user-total">
+            <div class="row">
+                <div class="col-3">
+                    <div class="list-group user-selection">
+                        <a href="./qlkho.html" class="list-group-item list-group-item-action list-group-lg">Quản lý kho</a>
+                        <a href="./qlkh.html" class="list-group-item list-group-item-action list-group-lg">Quản
+                            lý khách hàng</a>
+                        <a href="./qldh.html" class="list-group-item list-group-item-action list-group-lg">Quản lý đơn hàng</a>
+                    </div>
+                </div>
+                <div class="col-9 user-info">
+                    <div class="user-pic">
+                        <form id="updateForm" method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data">
+                            <img class="mg-auto" src="" alt="" id="picture" style="width: 200px; height: 200px;">
+                            <input class="form-control form-control-lg" id="formFileLg" name="formFileLg" type="file" multiple="false">
+                            <div class="user-comp">
+                                <div class="mb-3 form-control-lg">
+                                    <label class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" id="ProductName" name="ProductName"
+                                        value="">
+                                </div>
+                                <div class="mb-3 form-control-lg">
+                                    <label class="form-label">Giá</label>
+                                    <input type="text" class="form-control" id="Price" name="Price"
+                                        aria-describedby="emailHelp" value="">
+                                </div>
+                                <div class="mb-3 form-control-lg">
+                                    <label class="form-label">Số lượng trong kho</label>
+                                    <input type="text" id="Stock" class="form-control" value="" name="Stock">
+                                </div><div class="mb-3 form-control-lg">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                          Loại
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            {% for category in list_category %}
+                                          <li><a class="dropdown-item" href="#" onclick="updateCategory('{{ category[0] }}')">{{ category[1] }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <input type="hidden" id="category" name="category">
+                                    </div>
+<!--                                <script src="{{ url_for('static', filename='them_sp.js') }}"></script>-->
+                                    <script>
+                                        function updateCategory(category) {
+                                            document.getElementById('category').value = category;
+                                        }
+                                        document.querySelectorAll('.dropdown-menu').forEach(item => {
+                                           item.addEventListener('click', (e) => {
+                                        e.preventDefault();
+                                        const btn = document.querySelector('.btn-secondary');
+                                        btn.textContent = e.target.textContent;
+                                            });
+                                        });
+                                        document.getElementById('formFileLg').addEventListener('change', function(e) {
+                                        var file = e.target.files[0];
+                                        var imageType = /image.*/;
+
+                                        if (!file.type.match(imageType)) {
+                                            alert('File is not an image.');
+                                            return;
+                                        }
+
+                                        var reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            var img = document.getElementById('picture');
+                                            img.src = reader.result;
+                                        }
+                                        reader.readAsDataURL(file);
+                                    });
+                                    </script>
+                                </div>
+                            </div>
+                            <input class="btn btn-primary" type="submit" value="Thêm sản phẩm">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
